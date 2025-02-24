@@ -163,7 +163,7 @@ const QuestionComponent = () => {
 		if (bottomSheetRef.current) {
 			setBottomSheetHeight(bottomSheetRef.current.offsetHeight);
 		}
-	}, [isBottomSheetVisible, bottomSheetRef.current]);
+	}, [isBottomSheetVisible, bottomSheetRef.current, isResolving]);
 
 	return (
 		<S.OuterContainer>
@@ -216,21 +216,30 @@ const QuestionComponent = () => {
 
 				<S.BottomSheet isBottomSheetVisible={isBottomSheetVisible} ref={bottomSheetRef}>
 					<S.BottomSheetHeader>
-						<S.BottomSheetTitle>문제 {currentQuestionIndex + 1}</S.BottomSheetTitle>
+						{!isResolving && answers.length != currentQuestionIndex ? (
+							<p>문제 제출하기</p>
+						) : (
+							<S.BottomSheetTitle>문제 {currentQuestionIndex + 1}</S.BottomSheetTitle>
+						)}
+
 						<S.BottomSheetButton onClick={toggleBottomSheet}>
 							<img src={isBottomSheetVisible ? bottomsheetHide : bottomsheetShow} />
 						</S.BottomSheetButton>
 					</S.BottomSheetHeader>
-					<S.AnswerOptionsContainer>
-						{questionData[currentQuestionIndex].choices.map(choice => (
-							<S.AnswerOption key={choice.number}>
-								<S.AnswerOptionNumber>{choice.number}</S.AnswerOptionNumber>
-								<S.AnswerOptionContent onClick={() => handleSelectAnswer(choice)}>
-									{choice.content}
-								</S.AnswerOptionContent>
-							</S.AnswerOption>
-						))}
-					</S.AnswerOptionsContainer>
+					{!isResolving && answers.length != currentQuestionIndex ? (
+						<S.SubmitButton>제출하기</S.SubmitButton>
+					) : (
+						<S.AnswerOptionsContainer>
+							{questionData[currentQuestionIndex].choices.map(choice => (
+								<S.AnswerOption key={choice.number}>
+									<S.AnswerOptionNumber>{choice.number}</S.AnswerOptionNumber>
+									<S.AnswerOptionContent onClick={() => handleSelectAnswer(choice)}>
+										{choice.content}
+									</S.AnswerOptionContent>
+								</S.AnswerOption>
+							))}
+						</S.AnswerOptionsContainer>
+					)}
 				</S.BottomSheet>
 			</S.InnerContainer>
 		</S.OuterContainer>

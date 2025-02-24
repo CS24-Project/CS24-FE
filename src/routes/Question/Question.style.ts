@@ -213,3 +213,19 @@ export const HintTimer = styled.div`
 	font-size: 12px;
 	font-weight: 400;
 `;
+
+export const SubmitButton = styled.div`
+    width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 16px;
+	cursor: pointer;
+	border-radius: 10px;
+	border: 1px solid ${theme.COLOR.Neutral_3_Gray};
+	padding: 16px;
+	background-color: ${theme.COLOR.InnerBackground};
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 12px;
+	font-weight: 500;
+`;
