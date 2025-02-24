@@ -139,9 +139,7 @@ const QuestionComponent = () => {
 											</S.MessageTitle>
 											{answer.content}
 										</S.MessageBubble>
-										{answer.content !== '문제의 정답을 다시 골라보세요.' && (
-											<S.ReslovingButton onClick={() => handleReset(answer.questionId)}>다시 풀기</S.ReslovingButton>
-										)}
+										<S.ReslovingButton onClick={() => handleReset(answer.questionId)}>다시 풀기</S.ReslovingButton>
 									</S.MessageContainer>
 								),
 						)}
