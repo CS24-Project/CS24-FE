@@ -50,7 +50,7 @@ const questionData: QuestionData[] = [
 ];
 
 const QuestionComponent = () => {
-	const [answers, setAnswers] = useState<{ questionId: number; answer: string }[]>([]);
+	const [answers, setAnswers] = useState<{ questionId: number; answer: number, content: string }[]>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [tempQuestionIndex, setTempQuestionIndex] = useState(0);
 	const [visibleQuestionIndexes, setVisibleQuestionIndexes] = useState<number[]>([]);
@@ -63,11 +63,11 @@ const QuestionComponent = () => {
 			if (existingAnswer) {
 				return prev.map(answer =>
 					answer.questionId === existingAnswer.questionId
-						? { questionId: answer.questionId, answer: choice.content }
+						? { questionId: answer.questionId, answer: choice.number, content: choice.content }
 						: answer,
 				);
 			} else {
-				return [...prev, { questionId: questionData[currentQuestionIndex].id, answer: choice.content }];
+				return [...prev, { questionId: questionData[currentQuestionIndex].id, answer: choice.number, content: choice.content }];
 			}
 		});
 
@@ -86,7 +86,7 @@ const QuestionComponent = () => {
 		setAnswers(prev =>
 			prev.map(answer =>
 				answer.questionId === selectedQuestion
-					? { questionId: answer.questionId, answer: '문제의 정답을 다시 골라보세요.' }
+					? { questionId: answer.questionId, answer: answer.answer, content: '문제의 정답을 다시 골라보세요.' }
 					: answer,
 			),
 		);
@@ -123,11 +123,11 @@ const QuestionComponent = () => {
 									<S.MessageContainer key={answer.questionId}>
 										<S.MessageBubble isQuestion={false}>
 											<S.MessageTitle>
-												{answer.answer === '문제의 정답을 다시 골라보세요.' ? '다시 풀기' : `정답 ${index + 1} - `}
+												{answer.content === '문제의 정답을 다시 골라보세요.' ? '다시 풀기' : `정답 ${index + 1} - ${answer.answer}`}
 											</S.MessageTitle>
-											{answer.answer}
+											{answer.content}
 										</S.MessageBubble>
-										{answer.answer !== '문제의 정답을 다시 골라보세요.' && (
+										{answer.content !== '문제의 정답을 다시 골라보세요.' && (
 											<S.ReslovingButton onClick={() => handleReset(answer.questionId)}>다시 풀기</S.ReslovingButton>
 										)}
 									</S.MessageContainer>
