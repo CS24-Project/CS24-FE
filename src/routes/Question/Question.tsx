@@ -1,6 +1,5 @@
-// import * as S from './Question.style';
+import * as S from './Question.style';
 import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
 
 interface Choice {
 	number: number;
@@ -50,20 +49,6 @@ const questionData: QuestionData[] = [
 	},
 ];
 
-const Container = styled.div`
-	height: 100vh;
-	overflow-y: auto;
-	border: 1px solid #ccc;
-	padding: 10px;
-`;
-
-const MessageBubble = styled.div<{ isQuestion: boolean }>`
-	background-color: ${({ isQuestion }) => (isQuestion ? '#f1f1f1' : '#e1ffe1')};
-	padding: 10px;
-	border-radius: 10px;
-	margin: 5px 0;
-`;
-
 const QuestionComponent = () => {
 	const [answers, setAnswers] = useState<{ questionId: number; answer: string }[]>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -100,7 +85,9 @@ const QuestionComponent = () => {
 		setTempQuestionIndex(currentQuestionIndex);
 		setAnswers(prev =>
 			prev.map(answer =>
-				answer.questionId === selectedQuestion ? { questionId: answer.questionId, answer: '다시 풀기 중...' } : answer,
+				answer.questionId === selectedQuestion
+					? { questionId: answer.questionId, answer: '문제의 정답을 다시 골라보세요.' }
+					: answer,
 			),
 		);
 		setCurrentQuestionIndex(selectedQuestion - 1);
@@ -120,39 +107,45 @@ const QuestionComponent = () => {
 	}, [currentQuestionIndex]);
 
 	return (
-		<Container ref={chatContainerRef}>
-			{questionData.map((question, index) => (
-				<React.Fragment key={question.id}>
-					{visibleQuestionIndexes.includes(index) && (
-						<MessageBubble isQuestion={true}>
-							<h4>질문 {index + 1}</h4>
-							<p>{question.content}</p>
-						</MessageBubble>
-					)}
-					{answers.map(
-						answer =>
-							answer.questionId === question.id && (
-								<MessageBubble isQuestion={false} key={answer.questionId}>
-									<h4>질문 {index + 1}</h4>
-									<p>{answer.answer}</p>
-									{answer.answer !== '다시 풀기 중...' && (
-										<button onClick={() => handleReset(answer.questionId)}>다시 풀기</button>
-									)}
-								</MessageBubble>
-							),
-					)}
-				</React.Fragment>
-			))}
-
-			<div>
-				<h3>문제{currentQuestionIndex}</h3>
-				{questionData[currentQuestionIndex].choices.map(choice => (
-					<button key={choice.number} onClick={() => handleSelectAnswer(choice)}>
-						{choice.content}
-					</button>
+		<S.OuterContainer>
+			<S.InnerContainer ref={chatContainerRef}>
+				{questionData.map((question, index) => (
+					<React.Fragment key={question.id}>
+						{visibleQuestionIndexes.includes(index) && (
+							<S.MessageBubble isQuestion={true}>
+								<S.MessageTitle>질문 {index + 1}</S.MessageTitle>
+								{question.content}
+							</S.MessageBubble>
+						)}
+						{answers.map(
+							answer =>
+								answer.questionId === question.id && (
+									<S.MessageContainer key={answer.questionId}>
+										<S.MessageBubble isQuestion={false}>
+											<S.MessageTitle>
+												{answer.answer === '문제의 정답을 다시 골라보세요.' ? '다시 풀기' : `정답 ${index + 1} - `}
+											</S.MessageTitle>
+											{answer.answer}
+										</S.MessageBubble>
+										{answer.answer !== '문제의 정답을 다시 골라보세요.' && (
+											<S.ReslovingButton onClick={() => handleReset(answer.questionId)}>다시 풀기</S.ReslovingButton>
+										)}
+									</S.MessageContainer>
+								),
+						)}
+					</React.Fragment>
 				))}
-			</div>
-		</Container>
+
+				<div>
+					<h3>문제{currentQuestionIndex + 1}</h3>
+					{questionData[currentQuestionIndex].choices.map(choice => (
+						<button key={choice.number} onClick={() => handleSelectAnswer(choice)}>
+							{choice.content}
+						</button>
+					))}
+				</div>
+			</S.InnerContainer>
+		</S.OuterContainer>
 	);
 };
 
