@@ -15,6 +15,9 @@ export const InnerContainer = styled.div`
 	background-color: ${theme.COLOR.InnerBackground};
 	overflow-y: auto;
 	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	position: relative;
 `;
 
 export const MessageBubble = styled.div<{ isQuestion: boolean }>`
@@ -22,30 +25,105 @@ export const MessageBubble = styled.div<{ isQuestion: boolean }>`
 	border: 1px solid ${({ isQuestion }) => (isQuestion ? theme.COLOR.InnerBackground : theme.COLOR.Primary)};
 	border-radius: 10px;
 	padding: 16px 12px;
-    margin: 4px 0px;
+	margin: 4px 0px;
 	max-width: 55%;
-    min-width: 284px;
+	min-width: 284px;
 	color: ${theme.COLOR.Neutral_3_Gray};
 	font-size: 14px;
 	font-weight: 400;
 `;
 
 export const MessageTitle = styled.div`
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 8px;
-`
+	font-size: 16px;
+	font-weight: 500;
+	margin-bottom: 8px;
+`;
 
 export const MessageContainer = styled.div`
-    margin-bottom: 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+	margin-bottom: 4px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
 `;
 
 export const ReslovingButton = styled.text`
 	font-size: 14px;
-	color: #0077ff;
+	color: ${theme.COLOR.Link};
 	cursor: pointer;
 	text-decoration: underline;
+`;
+
+export const BottomSheet = styled.div<{ isBottomSheetVisible: boolean }>`
+    height: ${({ isBottomSheetVisible }) => (isBottomSheetVisible ? 'auto' : '55px')};
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: ${theme.COLOR.InnerBackground};
+    padding: 16px;
+    box-shadow: 0 -2px 10px ${theme.COLOR.Neutral_2_Gray};
+    border-radius: 10px 10px 0 0;
+    z-index: 1000;
+    overflow: hidden;
+    
+    ${({ isBottomSheetVisible }) =>
+        !isBottomSheetVisible &&
+        `
+        overflow: auto;
+    `}
+`;
+
+
+export const BottomSheetHeader = styled.div`
+	display: flex;
+	align-items: top;
+	justify-content: space-between;
+	margin: 8px;
+`;
+
+export const BottomSheetTitle = styled.text`
+	display: block;
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 16px;
+	font-weight: 500;
+`;
+
+export const BottomSheetButton = styled.div`
+    cursor: pointer;
+`;
+
+export const AnswerOptionsContainer = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 8px 16px;
+`;
+
+export const AnswerOption = styled.div`
+	display: flex;
+	align-items: top;
+	gap: 4px;
+	padding: 16px 10px 16px 12px;
+	border-radius: 10px;
+	border: 1px solid ${theme.COLOR.Neutral_3_Gray};
+	cursor: pointer;
+`;
+
+export const AnswerOptionNumber = styled.div`
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: ${theme.COLOR.Neutral_3_Gray};
+	border-radius: 3px;
+	color: ${theme.COLOR.InnerBackground};
+	font-size: 14px;
+	font-weight: 500;
+`;
+
+export const AnswerOptionContent = styled.div`
+	background-color: ${theme.COLOR.Neutral_1};
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 14px;
+	font-weight: 500;
 `;

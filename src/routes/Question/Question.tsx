@@ -1,5 +1,7 @@
 import * as S from './Question.style';
 import React, { useState, useRef, useEffect } from 'react';
+import bottomsheetHide from '@assets/icons/bottomsheet_hide.svg';
+import bottomsheetShow from '@assets/icons/bottomsheet_show.svg';
 
 interface Choice {
 	number: number;
@@ -50,12 +52,13 @@ const questionData: QuestionData[] = [
 ];
 
 const QuestionComponent = () => {
-	const [answers, setAnswers] = useState<{ questionId: number; answer: number, content: string }[]>([]);
+	const [answers, setAnswers] = useState<{ questionId: number; answer: number; content: string }[]>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [tempQuestionIndex, setTempQuestionIndex] = useState(0);
 	const [visibleQuestionIndexes, setVisibleQuestionIndexes] = useState<number[]>([]);
 	const [isResolving, setIsResolving] = useState(false);
 	const chatContainerRef = useRef<HTMLDivElement>(null);
+	const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
 
 	const handleSelectAnswer = (choice: Choice) => {
 		setAnswers(prev => {
@@ -67,7 +70,10 @@ const QuestionComponent = () => {
 						: answer,
 				);
 			} else {
-				return [...prev, { questionId: questionData[currentQuestionIndex].id, answer: choice.number, content: choice.content }];
+				return [
+					...prev,
+					{ questionId: questionData[currentQuestionIndex].id, answer: choice.number, content: choice.content },
+				];
 			}
 		});
 
@@ -92,6 +98,10 @@ const QuestionComponent = () => {
 		);
 		setCurrentQuestionIndex(selectedQuestion - 1);
 		setIsResolving(true);
+	};
+
+	const toggleBottomSheet = () => {
+		setIsBottomSheetVisible(prev => !prev);
 	};
 
 	useEffect(() => {
@@ -123,7 +133,9 @@ const QuestionComponent = () => {
 									<S.MessageContainer key={answer.questionId}>
 										<S.MessageBubble isQuestion={false}>
 											<S.MessageTitle>
-												{answer.content === '문제의 정답을 다시 골라보세요.' ? '다시 풀기' : `정답 ${index + 1} - ${answer.answer}`}
+												{answer.content === '문제의 정답을 다시 골라보세요.'
+													? '다시 풀기'
+													: `정답 ${index + 1} - ${answer.answer}`}
 											</S.MessageTitle>
 											{answer.content}
 										</S.MessageBubble>
@@ -136,14 +148,24 @@ const QuestionComponent = () => {
 					</React.Fragment>
 				))}
 
-				<div>
-					<h3>문제{currentQuestionIndex + 1}</h3>
-					{questionData[currentQuestionIndex].choices.map(choice => (
-						<button key={choice.number} onClick={() => handleSelectAnswer(choice)}>
-							{choice.content}
-						</button>
-					))}
-				</div>
+				<S.BottomSheet isBottomSheetVisible={isBottomSheetVisible}>
+					<S.BottomSheetHeader>
+						<S.BottomSheetTitle>문제 {currentQuestionIndex + 1}</S.BottomSheetTitle>
+						<S.BottomSheetButton onClick={toggleBottomSheet}>
+							<img src={isBottomSheetVisible ? bottomsheetHide : bottomsheetShow} />
+						</S.BottomSheetButton>
+					</S.BottomSheetHeader>
+					<S.AnswerOptionsContainer>
+						{questionData[currentQuestionIndex].choices.map(choice => (
+							<S.AnswerOption key={choice.number}>
+								<S.AnswerOptionNumber>{choice.number}</S.AnswerOptionNumber>
+								<S.AnswerOptionContent onClick={() => handleSelectAnswer(choice)}>
+									{choice.content}
+								</S.AnswerOptionContent>
+							</S.AnswerOption>
+						))}
+					</S.AnswerOptionsContainer>
+				</S.BottomSheet>
 			</S.InnerContainer>
 		</S.OuterContainer>
 	);
