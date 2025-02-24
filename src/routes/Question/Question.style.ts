@@ -43,9 +43,8 @@ export const HeaderTitle = styled.div`
 	font-weight: 400;
 `;
 
-export const ScrollableContainer = styled.div<{ bottomSheetHeight: number }>`
-	height: ${({ bottomSheetHeight }) => `calc(100% - ${bottomSheetHeight}px)`};
-	overflow-y: auto;
+export const ScrollableContainer = styled.div`
+	overflow-y: scroll;
 	margin: 0 16px;
 `;
 

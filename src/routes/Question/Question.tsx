@@ -54,6 +54,7 @@ const questionData: QuestionData[] = [
 ];
 
 const QuestionComponent = () => {
+	const [scrollHeight, setScrollHeight] = useState(window.innerHeight);
 	const [answers, setAnswers] = useState<{ questionId: number; answer: number; content: string }[]>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [tempQuestionIndex, setTempQuestionIndex] = useState(0);
@@ -68,9 +69,9 @@ const QuestionComponent = () => {
 	const [countdownInterval, setCountdownInterval] = useState<number | null>(null);
 	const navigate = useNavigate();
 
-    const handleLogoClick = () => {
-        navigate('/main');
-    };
+	const handleLogoClick = () => {
+		navigate('/main');
+	};
 
 	const handleSelectAnswer = (choice: Choice) => {
 		setAnswers(prev => {
@@ -142,6 +143,11 @@ const QuestionComponent = () => {
 	};
 
 	useEffect(() => {
+		const newHeight = window.innerHeight - bottomSheetHeight - 44;
+		setScrollHeight(newHeight);
+	}, [isBottomSheetVisible, bottomSheetHeight]);
+
+	useEffect(() => {
 		if (chatContainerRef.current) {
 			chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
 		}
@@ -157,17 +163,17 @@ const QuestionComponent = () => {
 		if (bottomSheetRef.current) {
 			setBottomSheetHeight(bottomSheetRef.current.offsetHeight);
 		}
-	}, [isBottomSheetVisible]);
+	}, [isBottomSheetVisible, bottomSheetRef.current]);
 
 	return (
 		<S.OuterContainer>
-			<S.InnerContainer ref={chatContainerRef}>
+			<S.InnerContainer>
 				<S.HeaderContainer>
 					<S.HeaderLogo src={logo} onClick={handleLogoClick} />
 					<S.HeaderTitle>문제 풀이</S.HeaderTitle>
 				</S.HeaderContainer>
 
-				<S.ScrollableContainer bottomSheetHeight={bottomSheetHeight}>
+				<S.ScrollableContainer style={{ height: `${scrollHeight}px` }} ref={chatContainerRef}>
 					{questionData.map((question, index) => (
 						<React.Fragment key={question.id}>
 							{visibleQuestionIndexes.includes(index) && (
