@@ -67,6 +67,9 @@ const MessageBubble = styled.div<{ isQuestion: boolean }>`
 const QuestionComponent = () => {
 	const [answers, setAnswers] = useState<{ questionId: number; answer: string }[]>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+	const [tempQuestionIndex, setTempQuestionIndex] = useState(0);
+	const [visibleQuestionIndexes, setVisibleQuestionIndexes] = useState<number[]>([]);
+	const [isResolving, setIsResolving] = useState(false);
 	const chatContainerRef = useRef<HTMLDivElement>(null);
 
 	const handleSelectAnswer = (choice: Choice) => {
@@ -83,18 +86,25 @@ const QuestionComponent = () => {
 			}
 		});
 
-		if (currentQuestionIndex < questionData.length - 1) {
-			setCurrentQuestionIndex(currentQuestionIndex + 1);
+		if (isResolving) {
+			setIsResolving(false);
+			setCurrentQuestionIndex(tempQuestionIndex);
+		} else {
+			if (currentQuestionIndex < questionData.length - 1) {
+				setCurrentQuestionIndex(currentQuestionIndex + 1);
+			}
 		}
 	};
 
 	const handleReset = (selectedQuestion: number) => {
+		setTempQuestionIndex(currentQuestionIndex);
 		setAnswers(prev =>
 			prev.map(answer =>
 				answer.questionId === selectedQuestion ? { questionId: answer.questionId, answer: '다시 풀기 중...' } : answer,
 			),
 		);
 		setCurrentQuestionIndex(selectedQuestion - 1);
+		setIsResolving(true);
 	};
 
 	useEffect(() => {
@@ -103,11 +113,17 @@ const QuestionComponent = () => {
 		}
 	}, [answers, currentQuestionIndex]);
 
+	useEffect(() => {
+		if (!visibleQuestionIndexes.includes(currentQuestionIndex)) {
+			setVisibleQuestionIndexes(prev => [...prev, currentQuestionIndex]);
+		}
+	}, [currentQuestionIndex]);
+
 	return (
 		<Container ref={chatContainerRef}>
 			{questionData.map((question, index) => (
 				<React.Fragment key={question.id}>
-					{index <= currentQuestionIndex && (
+					{visibleQuestionIndexes.includes(index) && (
 						<MessageBubble isQuestion={true}>
 							<h4>질문 {index + 1}</h4>
 							<p>{question.content}</p>
@@ -129,7 +145,7 @@ const QuestionComponent = () => {
 			))}
 
 			<div>
-				<h3>정답을 선택하세요</h3>
+				<h3>문제{currentQuestionIndex}</h3>
 				{questionData[currentQuestionIndex].choices.map(choice => (
 					<button key={choice.number} onClick={() => handleSelectAnswer(choice)}>
 						{choice.content}
