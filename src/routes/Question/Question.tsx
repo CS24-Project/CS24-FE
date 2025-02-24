@@ -1,5 +1,6 @@
 import * as S from './Question.style';
 import React, { useState, useRef, useEffect } from 'react';
+import logo from '@assets/logos/main_logo.png';
 import bottomsheetHide from '@assets/icons/bottomsheet_hide.svg';
 import bottomsheetShow from '@assets/icons/bottomsheet_show.svg';
 
@@ -59,6 +60,12 @@ const QuestionComponent = () => {
 	const [isResolving, setIsResolving] = useState(false);
 	const chatContainerRef = useRef<HTMLDivElement>(null);
 	const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
+	const bottomSheetRef = useRef<HTMLDivElement | null>(null);
+	const [bottomSheetHeight, setBottomSheetHeight] = useState(0);
+	const [isToastVisible, setIsToastVisible] = useState(false);
+	const [remainingTime, setRemainingTime] = useState(5);
+	const [countdownInterval, setCountdownInterval] = useState<number | null>(null);
+
 
 	const handleSelectAnswer = (choice: Choice) => {
 		setAnswers(prev => {
@@ -99,6 +106,31 @@ const QuestionComponent = () => {
 		setCurrentQuestionIndex(selectedQuestion - 1);
 		setIsResolving(true);
 	};
+	
+	const showToast = () => {
+		if (countdownInterval) {
+			clearInterval(countdownInterval);
+		}
+
+		setIsToastVisible(true);
+		setRemainingTime(5);
+		setTimeout(() => {
+			setIsToastVisible(false);
+		}, 5000);
+		
+		const newCountdownInterval = window.setInterval(() => {
+			setRemainingTime((prev) => {
+				if (prev <= 1) {
+					clearInterval(newCountdownInterval);
+					setCountdownInterval(null);
+					return 0;
+				}
+				return prev - 1;
+			});
+		}, 1000);
+		
+		setCountdownInterval(newCountdownInterval);
+	};
 
 	const toggleBottomSheet = () => {
 		setIsBottomSheetVisible(prev => !prev);
@@ -116,6 +148,12 @@ const QuestionComponent = () => {
 		}
 	}, [currentQuestionIndex]);
 
+	useEffect(() => {
+		if (bottomSheetRef.current) {
+			setBottomSheetHeight(bottomSheetRef.current.offsetHeight);
+		}
+	}, [isBottomSheetVisible]);
+
 	return (
 		<S.OuterContainer>
 			<S.InnerContainer ref={chatContainerRef}>
@@ -125,6 +163,7 @@ const QuestionComponent = () => {
 							<S.MessageBubble isQuestion={true}>
 								<S.MessageTitle>질문 {index + 1}</S.MessageTitle>
 								{question.content}
+								<S.HintButton onClick={showToast}>힌트보기</S.HintButton>
 							</S.MessageBubble>
 						)}
 						{answers.map(
@@ -146,7 +185,15 @@ const QuestionComponent = () => {
 					</React.Fragment>
 				))}
 
-				<S.BottomSheet isBottomSheetVisible={isBottomSheetVisible}>
+				<S.HintContainer isVisible={isToastVisible} bottomSheetHeight={bottomSheetHeight}>
+					<S.HintHeader>
+						<S.HintTitle><S.HintImage src={logo}/>힌트보기</S.HintTitle>
+						<S.HintTimer>{remainingTime}초 후 창이 닫힙니다.</S.HintTimer>
+					</S.HintHeader>
+					{questionData[currentQuestionIndex].hint}
+				</S.HintContainer>
+
+				<S.BottomSheet isBottomSheetVisible={isBottomSheetVisible} ref={bottomSheetRef}>
 					<S.BottomSheetHeader>
 						<S.BottomSheetTitle>문제 {currentQuestionIndex + 1}</S.BottomSheetTitle>
 						<S.BottomSheetButton onClick={toggleBottomSheet}>

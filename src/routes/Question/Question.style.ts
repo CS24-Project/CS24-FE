@@ -54,25 +54,24 @@ export const ReslovingButton = styled.text`
 `;
 
 export const BottomSheet = styled.div<{ isBottomSheetVisible: boolean }>`
-    height: ${({ isBottomSheetVisible }) => (isBottomSheetVisible ? 'auto' : '55px')};
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: ${theme.COLOR.InnerBackground};
-    padding: 16px;
-    box-shadow: 0 -2px 10px ${theme.COLOR.Neutral_2_Gray};
-    border-radius: 10px 10px 0 0;
-    z-index: 1000;
-    overflow: hidden;
-    
-    ${({ isBottomSheetVisible }) =>
-        !isBottomSheetVisible &&
-        `
+	height: ${({ isBottomSheetVisible }) => (isBottomSheetVisible ? 'auto' : '55px')};
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: ${theme.COLOR.InnerBackground};
+	padding: 16px;
+	box-shadow: 0 -2px 10px ${theme.COLOR.Neutral_2_Gray};
+	border-radius: 10px 10px 0 0;
+	z-index: 1000;
+	overflow: hidden;
+
+	${({ isBottomSheetVisible }) =>
+		!isBottomSheetVisible &&
+		`
         overflow: auto;
     `}
 `;
-
 
 export const BottomSheetHeader = styled.div`
 	display: flex;
@@ -89,7 +88,7 @@ export const BottomSheetTitle = styled.text`
 `;
 
 export const BottomSheetButton = styled.div`
-    cursor: pointer;
+	cursor: pointer;
 `;
 
 export const AnswerOptionsContainer = styled.div`
@@ -126,4 +125,63 @@ export const AnswerOptionContent = styled.div`
 	color: ${theme.COLOR.Neutral_3_Gray};
 	font-size: 14px;
 	font-weight: 500;
+`;
+
+export const HintButton = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 16px;
+	cursor: pointer;
+	border-radius: 10px;
+	border: 1px solid ${theme.COLOR.Neutral_3_Gray};
+	padding: 16px;
+	background-color: ${theme.COLOR.InnerBackground};
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 12px;
+	font-weight: 500;
+`;
+
+export const HintContainer = styled.div<{ isVisible: boolean; bottomSheetHeight: number }>`
+	position: absolute;
+	width: calc(100% - 32px); /* 32px을 빼서 너비 조정 */
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: calc(${({ bottomSheetHeight }) => bottomSheetHeight}px + 16px);
+	background-color: ${theme.COLOR.InnerBackground};
+	color: ${theme.COLOR.Neutral_3_Gray};
+	border: 1px solid ${theme.COLOR.Primary};
+	padding: 16px;
+	border-radius: 10px;
+	transition:
+		bottom 0.3s ease-in-out,
+		opacity 0.3s ease-in-out;
+	opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+`;
+
+export const HintHeader = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+`;
+
+export const HintTitle = styled.div`
+	display: flex;
+	align-items: center;
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 16px;
+	font-weight: 500;
+`;
+
+export const HintImage = styled.img`
+	width: 24px;
+	height: auto;
+	margin-right: 8px;
+`;
+
+export const HintTimer = styled.div`
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 12px;
+	font-weight: 400;
 `;
