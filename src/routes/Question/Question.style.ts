@@ -14,10 +14,19 @@ export const InnerContainer = styled.div`
 	height: 100vh;
 	background-color: ${theme.COLOR.InnerBackground};
 	overflow-y: auto;
-	padding: 10px;
 	display: flex;
 	flex-direction: column;
 	position: relative;
+`;
+
+export const ScrollableContainer = styled.div<{ bottomSheetHeight: number }>`
+	position: absolute; /* 절대 위치로 설정 */
+	top: 0; /* 최상단에 위치 */
+	bottom: ${({ bottomSheetHeight }) => `${bottomSheetHeight}px`};
+	left: 0;
+	right: 0;
+	overflow-y: auto;
+	margin: 0 16px;
 `;
 
 export const MessageBubble = styled.div<{ isQuestion: boolean }>`

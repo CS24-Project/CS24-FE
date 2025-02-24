@@ -66,7 +66,6 @@ const QuestionComponent = () => {
 	const [remainingTime, setRemainingTime] = useState(5);
 	const [countdownInterval, setCountdownInterval] = useState<number | null>(null);
 
-
 	const handleSelectAnswer = (choice: Choice) => {
 		setAnswers(prev => {
 			const existingAnswer = prev.find(answer => answer.questionId === questionData[currentQuestionIndex].id);
@@ -106,7 +105,7 @@ const QuestionComponent = () => {
 		setCurrentQuestionIndex(selectedQuestion - 1);
 		setIsResolving(true);
 	};
-	
+
 	const showToast = () => {
 		if (countdownInterval) {
 			clearInterval(countdownInterval);
@@ -117,9 +116,9 @@ const QuestionComponent = () => {
 		setTimeout(() => {
 			setIsToastVisible(false);
 		}, 5000);
-		
+
 		const newCountdownInterval = window.setInterval(() => {
-			setRemainingTime((prev) => {
+			setRemainingTime(prev => {
 				if (prev <= 1) {
 					clearInterval(newCountdownInterval);
 					setCountdownInterval(null);
@@ -128,7 +127,7 @@ const QuestionComponent = () => {
 				return prev - 1;
 			});
 		}, 1000);
-		
+
 		setCountdownInterval(newCountdownInterval);
 	};
 
@@ -157,37 +156,42 @@ const QuestionComponent = () => {
 	return (
 		<S.OuterContainer>
 			<S.InnerContainer ref={chatContainerRef}>
-				{questionData.map((question, index) => (
-					<React.Fragment key={question.id}>
-						{visibleQuestionIndexes.includes(index) && (
-							<S.MessageBubble isQuestion={true}>
-								<S.MessageTitle>질문 {index + 1}</S.MessageTitle>
-								{question.content}
-								<S.HintButton onClick={showToast}>힌트보기</S.HintButton>
-							</S.MessageBubble>
-						)}
-						{answers.map(
-							answer =>
-								answer.questionId === question.id && (
-									<S.MessageContainer key={answer.questionId}>
-										<S.MessageBubble isQuestion={false}>
-											<S.MessageTitle>
-												{answer.content === '문제의 정답을 다시 골라보세요.'
-													? '다시 풀기'
-													: `정답 ${index + 1} - ${answer.answer}`}
-											</S.MessageTitle>
-											{answer.content}
-										</S.MessageBubble>
-										<S.ReslovingButton onClick={() => handleReset(answer.questionId)}>다시 풀기</S.ReslovingButton>
-									</S.MessageContainer>
-								),
-						)}
-					</React.Fragment>
-				))}
+				<S.ScrollableContainer bottomSheetHeight={bottomSheetHeight}>
+					{questionData.map((question, index) => (
+						<React.Fragment key={question.id}>
+							{visibleQuestionIndexes.includes(index) && (
+								<S.MessageBubble isQuestion={true}>
+									<S.MessageTitle>질문 {index + 1}</S.MessageTitle>
+									{question.content}
+									<S.HintButton onClick={showToast}>힌트보기</S.HintButton>
+								</S.MessageBubble>
+							)}
+							{answers.map(
+								answer =>
+									answer.questionId === question.id && (
+										<S.MessageContainer key={answer.questionId}>
+											<S.MessageBubble isQuestion={false}>
+												<S.MessageTitle>
+													{answer.content === '문제의 정답을 다시 골라보세요.'
+														? '다시 풀기'
+														: `정답 ${index + 1} - ${answer.answer}`}
+												</S.MessageTitle>
+												{answer.content}
+											</S.MessageBubble>
+											<S.ReslovingButton onClick={() => handleReset(answer.questionId)}>다시 풀기</S.ReslovingButton>
+										</S.MessageContainer>
+									),
+							)}
+						</React.Fragment>
+					))}
+				</S.ScrollableContainer>
 
 				<S.HintContainer isVisible={isToastVisible} bottomSheetHeight={bottomSheetHeight}>
 					<S.HintHeader>
-						<S.HintTitle><S.HintImage src={logo}/>힌트보기</S.HintTitle>
+						<S.HintTitle>
+							<S.HintImage src={logo} />
+							힌트보기
+						</S.HintTitle>
 						<S.HintTimer>{remainingTime}초 후 창이 닫힙니다.</S.HintTimer>
 					</S.HintHeader>
 					{questionData[currentQuestionIndex].hint}
