@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import logo from '@assets/logos/main_logo.png';
 import bottomsheetHide from '@assets/icons/bottomsheet_hide.svg';
 import bottomsheetShow from '@assets/icons/bottomsheet_show.svg';
+import { useNavigate } from 'react-router-dom';
 
 interface Choice {
 	number: number;
@@ -65,6 +66,11 @@ const QuestionComponent = () => {
 	const [isToastVisible, setIsToastVisible] = useState(false);
 	const [remainingTime, setRemainingTime] = useState(5);
 	const [countdownInterval, setCountdownInterval] = useState<number | null>(null);
+	const navigate = useNavigate();
+
+    const handleLogoClick = () => {
+        navigate('/main');
+    };
 
 	const handleSelectAnswer = (choice: Choice) => {
 		setAnswers(prev => {
@@ -156,6 +162,11 @@ const QuestionComponent = () => {
 	return (
 		<S.OuterContainer>
 			<S.InnerContainer ref={chatContainerRef}>
+				<S.HeaderContainer>
+					<S.HeaderLogo src={logo} onClick={handleLogoClick} />
+					<S.HeaderTitle>문제 풀이</S.HeaderTitle>
+				</S.HeaderContainer>
+
 				<S.ScrollableContainer bottomSheetHeight={bottomSheetHeight}>
 					{questionData.map((question, index) => (
 						<React.Fragment key={question.id}>

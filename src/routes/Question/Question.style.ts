@@ -19,12 +19,32 @@ export const InnerContainer = styled.div`
 	position: relative;
 `;
 
+export const HeaderContainer = styled.div`
+	background-color: ${theme.COLOR.InnerBackground};
+	display: flex;
+	height: 44px;
+	align-items: center;
+	z-index: 1000;
+	padding: 0 16px;
+`;
+
+export const HeaderLogo = styled.img`
+	width: 24px;
+	height: 22px;
+	margin-right: 8px;
+	cursor: pointer;
+`;
+
+export const HeaderTitle = styled.div`
+	flex: 1;
+	text-align: center;
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 14px;
+	font-weight: 400;
+`;
+
 export const ScrollableContainer = styled.div<{ bottomSheetHeight: number }>`
-	position: absolute; /* 절대 위치로 설정 */
-	top: 0; /* 최상단에 위치 */
-	bottom: ${({ bottomSheetHeight }) => `${bottomSheetHeight}px`};
-	left: 0;
-	right: 0;
+	height: ${({ bottomSheetHeight }) => `calc(100% - ${bottomSheetHeight}px)`};
 	overflow-y: auto;
 	margin: 0 16px;
 `;
