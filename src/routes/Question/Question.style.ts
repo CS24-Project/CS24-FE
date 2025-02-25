@@ -138,16 +138,6 @@ export const AnswerOptionsContainer = styled.div`
 	gap: 8px 16px;
 `;
 
-export const AnswerOption = styled.div`
-	display: flex;
-	align-items: top;
-	gap: 4px;
-	padding: 16px 10px 16px 12px;
-	border-radius: 10px;
-	border: 1px solid ${theme.COLOR.Neutral_3_Gray};
-	cursor: pointer;
-`;
-
 export const AnswerOptionNumber = styled.div`
 	width: 24px;
 	height: 24px;
@@ -159,6 +149,24 @@ export const AnswerOptionNumber = styled.div`
 	color: ${theme.COLOR.InnerBackground};
 	font-size: 14px;
 	font-weight: 500;
+`;
+
+export const AnswerOption = styled.div`
+	display: flex;
+	align-items: top;
+	gap: 4px;
+	padding: 16px 10px 16px 12px;
+	border-radius: 10px;
+	border: 1px solid ${theme.COLOR.Neutral_3_Gray};
+	cursor: pointer;
+	&:hover {
+		box-shadow: inset 0 0 0 2px ${theme.COLOR.SelectAnswer};
+		border: 1px solid ${theme.COLOR.SelectAnswer};
+
+		${AnswerOptionNumber} {
+			background-color: ${theme.COLOR.SelectAnswer};
+		}
+	}
 `;
 
 export const AnswerOptionContent = styled.div`
