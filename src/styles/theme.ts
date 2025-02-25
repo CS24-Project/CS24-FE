@@ -9,6 +9,10 @@ const COLOR = {
 	Link: '#1565C0',
 	Warning: '#FFD54F',
 	Success: '#81C784',
+	OuterBackground: '#F1F2F6',
+	InnerBackground: '#FFFFFF',
+	SelectAnswer: '#FDCC12',
+	Kakao: '#FEE500',
 } as const;
 
 const FONT = {
