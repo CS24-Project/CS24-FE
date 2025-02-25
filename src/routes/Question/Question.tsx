@@ -64,13 +64,25 @@ const QuestionComponent = () => {
 	const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
 	const bottomSheetRef = useRef<HTMLDivElement | null>(null);
 	const [bottomSheetHeight, setBottomSheetHeight] = useState(0);
-	const [isToastVisible, setIsToastVisible] = useState(false);
+	const [isToastEnabled, setIsToastEnabled] = useState(true);
 	const [remainingTime, setRemainingTime] = useState(5);
 	const [countdownInterval, setCountdownInterval] = useState<number | null>(null);
 	const navigate = useNavigate();
+	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [isBottomSheetEnabled, setIsBottomSheetEnabled] = useState(false);
+	const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
 
 	const handleLogoClick = () => {
 		navigate('/main');
+	};
+
+	const handleAnswerClick = () => {
+		navigate('/answer');
+	};
+
+	const handleSubmit = () => {
+		setIsSubmitted(true);
+		setIsBottomSheetEnabled(true);
 	};
 
 	const handleSelectAnswer = (choice: Choice) => {
@@ -118,10 +130,10 @@ const QuestionComponent = () => {
 			clearInterval(countdownInterval);
 		}
 
-		setIsToastVisible(true);
+		setIsToastEnabled(false);
 		setRemainingTime(5);
 		setTimeout(() => {
-			setIsToastVisible(false);
+			setIsToastEnabled(true);
 		}, 5000);
 
 		const newCountdownInterval = window.setInterval(() => {
@@ -151,7 +163,7 @@ const QuestionComponent = () => {
 		if (chatContainerRef.current) {
 			chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
 		}
-	}, [answers, currentQuestionIndex]);
+	}, [answers, isBottomSheetVisible, bottomSheetHeight]);
 
 	useEffect(() => {
 		if (!visibleQuestionIndexes.includes(currentQuestionIndex)) {
@@ -163,7 +175,24 @@ const QuestionComponent = () => {
 		if (bottomSheetRef.current) {
 			setBottomSheetHeight(bottomSheetRef.current.offsetHeight);
 		}
-	}, [isBottomSheetVisible, bottomSheetRef.current, isResolving]);
+	}, [
+		currentQuestionIndex,
+		isBottomSheetVisible,
+		bottomSheetRef.current,
+		isResolving,
+		isSubmitEnabled,
+		isBottomSheetEnabled,
+	]);
+
+	useEffect(() => {
+		if (isResolving) {
+			setIsBottomSheetEnabled(!isResolving);
+		}
+	}, [isResolving]);
+
+	useEffect(() => {
+		setIsSubmitEnabled(!isResolving && answers.length !== currentQuestionIndex);
+	}, [isResolving, answers, currentQuestionIndex]);
 
 	return (
 		<S.OuterContainer>
@@ -180,7 +209,9 @@ const QuestionComponent = () => {
 								<S.MessageBubble isQuestion={true}>
 									<S.MessageTitle>질문 {index + 1}</S.MessageTitle>
 									{question.content}
-									<S.HintButton onClick={showToast}>힌트보기</S.HintButton>
+									<S.HintButton onClick={showToast} isBottomSheetEnabled={isBottomSheetEnabled}>
+										힌트보기
+									</S.HintButton>
 								</S.MessageBubble>
 							)}
 							{answers.map(
@@ -195,15 +226,26 @@ const QuestionComponent = () => {
 												</S.MessageTitle>
 												{answer.content}
 											</S.MessageBubble>
-											<S.ReslovingButton onClick={() => handleReset(answer.questionId)}>다시 풀기</S.ReslovingButton>
+											<S.ReslovingButton
+												onClick={() => handleReset(answer.questionId)}
+												isBottomSheetEnabled={isBottomSheetEnabled}>
+												다시 풀기
+											</S.ReslovingButton>
 										</S.MessageContainer>
 									),
 							)}
 						</React.Fragment>
 					))}
+					{isBottomSheetEnabled && (
+						<S.MessageBubble isQuestion={true}>
+							<S.MessageTitle>답안 제출 완료</S.MessageTitle>
+							오늘의 질문 3개 중 2문제를 맞췄어요! AI의 답안지 설명을 확인해볼까요?
+							<S.AnswerButton onClick={handleAnswerClick}>AI의 답안지 설명 보러가기</S.AnswerButton>
+						</S.MessageBubble>
+					)}
 				</S.ScrollableContainer>
 
-				<S.HintContainer isVisible={isToastVisible} bottomSheetHeight={bottomSheetHeight}>
+				<S.HintContainer isHintEnabled={isToastEnabled} bottomSheetHeight={bottomSheetHeight}>
 					<S.HintHeader>
 						<S.HintTitle>
 							<S.HintImage src={logo} />
@@ -214,9 +256,12 @@ const QuestionComponent = () => {
 					{questionData[currentQuestionIndex].hint}
 				</S.HintContainer>
 
-				<S.BottomSheet isBottomSheetVisible={isBottomSheetVisible} ref={bottomSheetRef}>
+				<S.BottomSheet
+					isBottomSheetVisible={isBottomSheetVisible}
+					isBottomSheetEnabled={isBottomSheetEnabled}
+					ref={bottomSheetRef}>
 					<S.BottomSheetHeader>
-						{!isResolving && answers.length != currentQuestionIndex ? (
+						{isSubmitEnabled ? (
 							<p>문제 제출하기</p>
 						) : (
 							<S.BottomSheetTitle>문제 {currentQuestionIndex + 1}</S.BottomSheetTitle>
@@ -226,8 +271,8 @@ const QuestionComponent = () => {
 							<img src={isBottomSheetVisible ? bottomsheetHide : bottomsheetShow} />
 						</S.BottomSheetButton>
 					</S.BottomSheetHeader>
-					{!isResolving && answers.length != currentQuestionIndex ? (
-						<S.SubmitButton>제출하기</S.SubmitButton>
+					{isSubmitEnabled ? (
+						<S.SubmitButton onClick={handleSubmit}>제출하기</S.SubmitButton>
 					) : (
 						<S.AnswerOptionsContainer>
 							{questionData[currentQuestionIndex].choices.map(choice => (

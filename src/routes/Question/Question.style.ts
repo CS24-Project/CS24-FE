@@ -74,14 +74,21 @@ export const MessageContainer = styled.div`
 	align-items: flex-end;
 `;
 
-export const ReslovingButton = styled.text`
+export const ReslovingButton = styled.text<{ isBottomSheetEnabled: boolean }>`
 	font-size: 14px;
 	color: ${theme.COLOR.Link};
 	cursor: pointer;
 	text-decoration: underline;
+
+	${({ isBottomSheetEnabled }) =>
+		isBottomSheetEnabled &&
+		`
+        pointer-events: none;
+        opacity: 0.5;
+    `}
 `;
 
-export const BottomSheet = styled.div<{ isBottomSheetVisible: boolean }>`
+export const BottomSheet = styled.div<{ isBottomSheetVisible: boolean; isBottomSheetEnabled: boolean }>`
 	height: ${({ isBottomSheetVisible }) => (isBottomSheetVisible ? 'auto' : '55px')};
 	position: absolute;
 	bottom: 0;
@@ -98,6 +105,12 @@ export const BottomSheet = styled.div<{ isBottomSheetVisible: boolean }>`
 		!isBottomSheetVisible &&
 		`
         overflow: auto;
+    `}
+
+	${({ isBottomSheetEnabled }) =>
+		isBottomSheetEnabled &&
+		`
+        display: none;
     `}
 `;
 
@@ -155,7 +168,7 @@ export const AnswerOptionContent = styled.div`
 	font-weight: 500;
 `;
 
-export const HintButton = styled.div`
+export const HintButton = styled.div<{ isBottomSheetEnabled: boolean }>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -168,9 +181,16 @@ export const HintButton = styled.div`
 	color: ${theme.COLOR.Neutral_3_Gray};
 	font-size: 12px;
 	font-weight: 500;
+
+	${({ isBottomSheetEnabled }) =>
+		isBottomSheetEnabled &&
+		`
+        pointer-events: none;
+        opacity: 0.5;
+    `}
 `;
 
-export const HintContainer = styled.div<{ isVisible: boolean; bottomSheetHeight: number }>`
+export const HintContainer = styled.div<{ isHintEnabled: boolean; bottomSheetHeight: number }>`
 	position: absolute;
 	width: calc(100% - 32px); /* 32px을 빼서 너비 조정 */
 	left: 50%;
@@ -184,7 +204,12 @@ export const HintContainer = styled.div<{ isVisible: boolean; bottomSheetHeight:
 	transition:
 		bottom 0.3s ease-in-out,
 		opacity 0.3s ease-in-out;
-	opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+
+	${({ isHintEnabled }) =>
+		isHintEnabled &&
+		`
+        display: none;
+    `}
 `;
 
 export const HintHeader = styled.div`
@@ -215,7 +240,22 @@ export const HintTimer = styled.div`
 `;
 
 export const SubmitButton = styled.div`
-    width: 100%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 16px;
+	cursor: pointer;
+	border-radius: 10px;
+	border: 1px solid ${theme.COLOR.Neutral_3_Gray};
+	padding: 16px;
+	background-color: ${theme.COLOR.InnerBackground};
+	color: ${theme.COLOR.Neutral_3_Gray};
+	font-size: 12px;
+	font-weight: 500;
+`;
+
+export const AnswerButton = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
