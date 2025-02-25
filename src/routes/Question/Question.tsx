@@ -1,4 +1,4 @@
-import QuestionComponent from '@/components/QuestionComponent';
+import QuestionComponent from '@/components/Question/QuestComponent';
 
 const Question = () => {
   return <QuestionComponent />;

@@ -192,7 +192,7 @@ export const HintButton = styled.div<{ isBottomSheetEnabled: boolean }>`
 
 export const HintContainer = styled.div<{ isHintEnabled: boolean; bottomSheetHeight: number }>`
 	position: absolute;
-	width: calc(100% - 32px); /* 32px을 빼서 너비 조정 */
+	width: calc(100% - 32px);
 	left: 50%;
 	transform: translateX(-50%);
 	bottom: calc(${({ bottomSheetHeight }) => bottomSheetHeight}px + 16px);
