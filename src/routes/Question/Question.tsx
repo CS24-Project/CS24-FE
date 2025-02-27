@@ -1,6 +1,7 @@
-// import * as S from './Question.style';
+import QuestionComponent from '@/components/Question/QuestComponent';
 
-function Question() {
-	return <></>;
-}
+const Question = () => {
+  return <QuestionComponent />;
+};
+
 export default Question;

@@ -1,5 +1,5 @@
 const COLOR = {
-	Primary: '#1C81E0',
+	Primary: '#FFE0A6',
 	Secondary: '#64B5F6',
 	Neutral_1: '#FFFFFF',
 	Neutral_2_Gray: '#DBDBDB',
@@ -9,6 +9,9 @@ const COLOR = {
 	Link: '#1565C0',
 	Warning: '#FFD54F',
 	Success: '#81C784',
+	OuterBackground: '#F1F2F6',
+	InnerBackground: '#FFFFFF',
+	SelectAnswer: '#FDCC12',
 } as const;
 
 const FONT = {
