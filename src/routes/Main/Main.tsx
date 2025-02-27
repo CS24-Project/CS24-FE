@@ -76,7 +76,7 @@ function Main() {
 						<S.FlexContainer>
 							<S.MockupImage src={answerImage} alt="답변 목업 이미지" />
 							<S.ContentBox>
-								<S.SubTitle>당안과 함께</S.SubTitle>
+								<S.SubTitle>답안과 함께</S.SubTitle>
 								<S.Title>나만의 피드백 제공</S.Title>
 								<S.Description>
 									답안과 함께 AI 피드백을 제공하여
