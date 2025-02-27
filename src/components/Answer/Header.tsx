@@ -1,4 +1,4 @@
-import * as S from '@/routes/Question/Question.style';
+import * as S from '@/routes/Answer/Answer.style';
 import logo from '@assets/logos/main_logo.png';
 
 interface HeaderProps {
@@ -8,7 +8,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onLogoClick }) => (
 	<S.HeaderContainer>
 		<S.HeaderLogo src={logo} onClick={onLogoClick} />
-		<S.HeaderTitle>문제 풀이</S.HeaderTitle>
+		<S.HeaderTitle>AI 답안지 해설</S.HeaderTitle>
 	</S.HeaderContainer>
 );
 
